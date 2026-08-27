@@ -1,11 +1,881 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Watshasha</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#080d13" />
+    <meta
+      name="description"
+      content="Watshasha brings curated Arabic movies and series to Stremio with rich TMDB metadata."
+    />
+    <meta
+      property="og:title"
+      content="Watshasha — Arabic stories, beautifully organized"
+    />
+    <meta
+      property="og:description"
+      content="A fast, focused Arabic movie and series catalogue for Stremio."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://watshasha.vercel.app/" />
+    <title>Watshasha — Arabic stories on your screen</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #f8f4ea;
+        --muted: #a7b0b8;
+        --line: rgba(255, 255, 255, 0.1);
+        --amber: #f3ae43;
+        --amber-light: #ffd991;
+        --teal: #51c6b5;
+        --bg: #080d13;
+        --panel: #141d28;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        background:
+          radial-gradient(
+            circle at 78% 10%,
+            rgba(243, 174, 67, 0.12),
+            transparent 30rem
+          ),
+          radial-gradient(
+            circle at 12% 42%,
+            rgba(81, 198, 181, 0.08),
+            transparent 28rem
+          ),
+          var(--bg);
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      a {
+        color: inherit;
+      }
+      .shell {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 84px;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        font-weight: 760;
+        letter-spacing: -0.03em;
+      }
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border: 1px solid rgba(243, 174, 67, 0.4);
+        border-radius: 12px;
+        background: linear-gradient(
+          145deg,
+          rgba(243, 174, 67, 0.24),
+          rgba(243, 174, 67, 0.06)
+        );
+        color: var(--amber-light);
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .nav-links a {
+        text-decoration: none;
+      }
+      .nav-links a:hover {
+        color: var(--ink);
+      }
+      .language-toggle {
+        min-width: 74px;
+        padding: 7px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--ink);
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .language-toggle:hover {
+        border-color: rgba(243, 174, 67, 0.45);
+        color: var(--amber-light);
+      }
+      html[dir="rtl"] body {
+        font-family: Tahoma, Arial, sans-serif;
+      }
+      html[dir="rtl"] .eyebrow,
+      html[dir="rtl"] .kicker {
+        letter-spacing: 0;
+      }
+      html[dir="rtl"] .trust-note {
+        border-right: 2px solid var(--teal);
+        border-left: 0;
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+        align-items: center;
+        gap: clamp(50px, 8vw, 110px);
+        min-height: 690px;
+        padding: 80px 0 96px;
+      }
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 22px;
+        color: var(--amber-light);
+        font-size: 13px;
+        font-weight: 760;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .eyebrow:before {
+        content: "";
+        width: 34px;
+        height: 1px;
+        background: var(--amber);
+      }
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font-size: clamp(50px, 7vw, 88px);
+        line-height: 0.98;
+        letter-spacing: -0.065em;
+      }
+      h1 span {
+        display: block;
+        color: var(--amber);
+        font-family: Georgia, serif;
+        font-style: italic;
+        font-weight: 500;
+        letter-spacing: -0.05em;
+      }
+      h1 .hero-main {
+        color: inherit;
+        font-family: inherit;
+        font-style: normal;
+        font-weight: inherit;
+      }
+      .hero-copy > p {
+        max-width: 650px;
+        margin: 30px 0 0;
+        color: var(--muted);
+        font-size: clamp(17px, 2vw, 20px);
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 34px;
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        padding: 0 23px;
+        border: 1px solid transparent;
+        border-radius: 14px;
+        font-size: 15px;
+        font-weight: 760;
+        text-decoration: none;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+      .button:hover {
+        transform: translateY(-2px);
+      }
+      .primary {
+        background: var(--amber);
+        color: #15110a;
+        box-shadow: 0 14px 35px rgba(243, 174, 67, 0.22);
+      }
+      .secondary {
+        border-color: var(--line);
+        background: rgba(255, 255, 255, 0.035);
+      }
+      .manifest-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: 660px;
+        margin-top: 18px;
+        padding: 9px 10px 9px 15px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.025);
+      }
+      .manifest-box code {
+        min-width: 0;
+        flex: 1;
+        overflow: hidden;
+        color: #b9c2ca;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .copy {
+        border: 0;
+        border-radius: 8px;
+        padding: 8px 11px;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--ink);
+        font: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .showcase {
+        position: relative;
+        min-height: 510px;
+      }
+      .showcase:before {
+        content: "";
+        position: absolute;
+        inset: 8% 4% 0 12%;
+        border: 1px solid rgba(243, 174, 67, 0.17);
+        border-radius: 40% 12% 34% 16%;
+        transform: rotate(-4deg);
+      }
+      .card {
+        position: absolute;
+        overflow: hidden;
+        width: 42%;
+        aspect-ratio: 2/3;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 22px;
+        background: var(--panel);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.38);
+      }
+      .card:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(
+            to top,
+            rgba(5, 8, 12, 0.98) 2%,
+            rgba(5, 8, 12, 0.05) 62%
+          ),
+          var(--art);
+      }
+      .card.one {
+        top: 3%;
+        left: 7%;
+        --art:
+          radial-gradient(circle at 65% 22%, #d9a54c 0 6%, transparent 7%),
+          linear-gradient(145deg, #263b43, #9f5d35 48%, #151a22);
+        transform: rotate(-7deg);
+      }
+      .card.two {
+        top: 17%;
+        right: 4%;
+        z-index: 2;
+        --art:
+          radial-gradient(circle at 46% 33%, #f5d2a1 0 7%, transparent 7.5%),
+          linear-gradient(155deg, #2d5260, #724251 52%, #171925);
+        transform: rotate(6deg);
+      }
+      .card.three {
+        bottom: 1%;
+        left: 30%;
+        z-index: 3;
+        --art:
+          radial-gradient(circle at 57% 28%, #f0c780 0 6%, transparent 6.5%),
+          linear-gradient(150deg, #1d5956, #b1743f 55%, #171b22);
+      }
+      .card-copy {
+        position: absolute;
+        right: 17px;
+        bottom: 16px;
+        left: 17px;
+        z-index: 1;
+        text-align: right;
+      }
+      .card-copy small {
+        color: var(--amber-light);
+        font-size: 10px;
+      }
+      .card-copy strong {
+        display: block;
+        font-family: Georgia, serif;
+        font-size: clamp(18px, 2.4vw, 26px);
+        line-height: 1.05;
+      }
+      .status {
+        position: absolute;
+        top: 3%;
+        right: 0;
+        z-index: 4;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 13px;
+        border: 1px solid rgba(81, 198, 181, 0.25);
+        border-radius: 999px;
+        background: rgba(8, 13, 19, 0.84);
+        color: #9de5da;
+        font-size: 12px;
+        font-weight: 720;
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--teal);
+        box-shadow: 0 0 0 5px rgba(81, 198, 181, 0.1);
+      }
+      .section {
+        padding: 110px 0;
+        border-top: 1px solid var(--line);
+      }
+      .section-heading {
+        display: grid;
+        grid-template-columns: 0.7fr 1.3fr;
+        gap: 50px;
+        align-items: end;
+        margin-bottom: 58px;
+      }
+      .kicker {
+        color: var(--amber);
+        font-size: 12px;
+        font-weight: 780;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+      h2 {
+        margin: 0;
+        font-size: clamp(34px, 5vw, 56px);
+        line-height: 1.05;
+        letter-spacing: -0.045em;
+      }
+      .section-heading p {
+        max-width: 620px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 17px;
+      }
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .feature {
+        min-height: 245px;
+        padding: 30px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.045),
+          rgba(255, 255, 255, 0.015)
+        );
+      }
+      .feature b {
+        color: var(--amber);
+        font-family: Georgia, serif;
+      }
+      .feature h3 {
+        margin: 48px 0 10px;
+        font-size: 21px;
+      }
+      .feature p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .install-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: rgba(20, 29, 40, 0.76);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.38);
+      }
+      .install-copy,
+      .steps {
+        padding: clamp(34px, 6vw, 72px);
+      }
+      .install-copy h2 {
+        margin-top: 14px;
+      }
+      .install-copy p {
+        color: var(--muted);
+      }
+      .steps {
+        background: rgba(255, 255, 255, 0.025);
+      }
+      .step {
+        display: grid;
+        grid-template-columns: 36px 1fr;
+        gap: 16px;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .step:last-child {
+        border: 0;
+      }
+      .step i {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border: 1px solid rgba(243, 174, 67, 0.3);
+        border-radius: 9px;
+        color: var(--amber-light);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 800;
+      }
+      .step strong {
+        display: block;
+      }
+      .step span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .trust {
+        display: grid;
+        grid-template-columns: 1.3fr 0.7fr;
+        gap: 32px;
+        align-items: center;
+      }
+      .trust p {
+        color: var(--muted);
+      }
+      .trust-note {
+        padding: 23px;
+        border-left: 2px solid var(--teal);
+        background: rgba(81, 198, 181, 0.05);
+        color: #b9d8d3;
+        font-size: 13px;
+      }
+      footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        padding: 34px 0 48px;
+        border-top: 1px solid var(--line);
+        color: #77828c;
+        font-size: 12px;
+      }
+      footer a {
+        color: var(--amber-light);
+        text-decoration: none;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding-top: 70px;
+        }
+        .showcase {
+          max-width: 620px;
+          width: 100%;
+          margin: auto;
+        }
+        .section-heading,
+        .install-panel,
+        .trust {
+          grid-template-columns: 1fr;
+        }
+        .feature-grid {
+          grid-template-columns: 1fr;
+        }
+        .feature {
+          min-height: 190px;
+        }
+        .feature h3 {
+          margin-top: 30px;
+        }
+      }
+      @media (max-width: 620px) {
+        .shell {
+          width: min(100% - 24px, 1180px);
+        }
+        .nav-links a:not(:last-child) {
+          display: none;
+        }
+        .hero {
+          min-height: auto;
+          padding: 58px 0 70px;
+        }
+        h1 {
+          font-size: clamp(47px, 15vw, 68px);
+        }
+        .actions {
+          flex-direction: column;
+        }
+        .button {
+          width: 100%;
+        }
+        .showcase {
+          min-height: 430px;
+        }
+        .card {
+          width: 45%;
+        }
+        .section {
+          padding: 78px 0;
+        }
+        .install-copy,
+        .steps {
+          padding: 30px 24px;
+        }
+        footer {
+          flex-direction: column;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Watshasha</h1>
-    <p>Arabic catalogue and metadata addon for Stremio.</p>
+    <header class="shell nav">
+      <a class="brand" href="#top"
+        ><span class="brand-mark">W</span><span>Watshasha</span></a
+      >
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#features" data-i18n="navFeatures">Features</a
+        ><a href="#install" data-i18n="navInstall">Install</a
+        ><a href="https://github.com/housamz/watshasha">GitHub</a
+        ><button
+          class="language-toggle"
+          id="language-toggle"
+          type="button"
+          aria-label="Switch language to Arabic"
+        >
+          العربية
+        </button>
+      </nav>
+    </header>
+    <main id="top">
+      <section class="shell hero">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="eyebrow">A Stremio catalogue for Arabic cinema</p>
+          <h1><span class="hero-main" data-i18n="heroTitle">Arabic stories,</span> <span data-i18n="heroAccent">beautifully organized.</span></h1>
+          <p data-i18n="heroDescription">
+            Discover Arabic movies and series through a fast, focused catalogue
+            powered by TMDB—complete with posters, details, seasons, and
+            cross-addon IMDb compatibility.
+          </p>
+          <div class="actions">
+            <a
+              class="button primary"
+              href="stremio://watshasha.vercel.app/manifest.json"
+              data-i18n="installStremio">Install on Stremio</a
+            ><a class="button secondary" href="#install"
+              data-i18n="viewSteps">View installation steps</a
+            >
+          </div>
+          <div class="manifest-box">
+            <code>https://watshasha.vercel.app/manifest.json</code
+            ><button class="copy" id="copy" type="button" data-i18n="copy">Copy</button>
+          </div>
+        </div>
+        <div class="showcase" aria-label="Arabic cinema catalogue cards">
+          <div class="status"><span class="dot"></span><span data-i18n="live">Live on Stremio</span></div>
+          <article class="card one">
+            <div class="card-copy" dir="rtl">
+              <small>فيلم</small><strong>حكايات المدينة</strong>
+            </div>
+          </article>
+          <article class="card two">
+            <div class="card-copy" dir="rtl">
+              <small>مسلسل</small><strong>ليالي القاهرة</strong>
+            </div>
+          </article>
+          <article class="card three">
+            <div class="card-copy" dir="rtl">
+              <small>اكتشف</small><strong>صوت البحر</strong>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="section" id="features">
+        <div class="shell">
+          <div class="section-heading">
+            <div>
+              <span class="kicker" data-i18n="discoveryKicker">Designed for discovery</span>
+              <h2 data-i18n="discoveryTitle">A clearer window into Arabic entertainment.</h2>
+            </div>
+            <p data-i18n="discoveryDescription">
+              Watshasha keeps the experience intentional: relevant Arabic
+              titles, useful metadata, fast cached responses, and IDs that work
+              with the wider Stremio ecosystem.
+            </p>
+          </div>
+          <div class="feature-grid">
+            <article class="feature">
+              <b>01</b>
+              <h3 data-i18n="featureOneTitle">Arabic-first catalogue</h3>
+              <p data-i18n="featureOneDescription">
+                Movies and series are selected using Arabic original-language
+                metadata and presented with reliable titles and artwork.
+              </p>
+            </article>
+            <article class="feature">
+              <b>02</b>
+              <h3 data-i18n="featureTwoTitle">Rich details</h3>
+              <p data-i18n="featureTwoDescription">
+                Explore descriptions, release dates, ratings, genres, cast,
+                creators, seasons, and episode information from TMDB.
+              </p>
+            </article>
+            <article class="feature">
+              <b>03</b>
+              <h3 data-i18n="featureThreeTitle">Cross-addon ready</h3>
+              <p data-i18n="featureThreeDescription">
+                IMDb-compatible IDs let Stremio request separately installed
+                compatible addons without Watshasha handling their accounts or
+                credentials.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="section" id="install">
+        <div class="shell install-panel">
+          <div class="install-copy">
+            <span class="kicker" data-i18n="installKicker">Install in minutes</span>
+            <h2 data-i18n="installTitle">One manifest. Two new catalogues.</h2>
+            <p data-i18n="installDescription">
+              Add Watshasha once to see dedicated movie and series rows across
+              your signed-in Stremio devices.
+            </p>
+            <a
+              class="button primary"
+              href="stremio://watshasha.vercel.app/manifest.json"
+              data-i18n="openStremio">Open in Stremio</a
+            >
+          </div>
+          <div class="steps">
+            <div class="step">
+              <i>1</i>
+              <div>
+                <strong data-i18n="stepOneTitle">Open Add-ons</strong
+                ><span data-i18n="stepOneDescription"
+                  >Launch Stremio and open the puzzle-piece Add-ons
+                  screen.</span
+                >
+              </div>
+            </div>
+            <div class="step">
+              <i>2</i>
+              <div>
+                <strong data-i18n="stepTwoTitle">Paste the manifest</strong
+                ><span data-i18n="stepTwoDescription"
+                  >Use the Watshasha manifest URL in the addon URL field.</span
+                >
+              </div>
+            </div>
+            <div class="step">
+              <i>3</i>
+              <div>
+                <strong data-i18n="stepThreeTitle">Install Watshasha</strong
+                ><span data-i18n="stepThreeDescription"
+                  >Confirm, then browse Watshasha under Movies and Series.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="shell trust">
+          <div>
+            <span class="kicker" data-i18n="trustKicker">Transparent by design</span>
+            <h2 data-i18n="trustTitle">Metadata, not media hosting.</h2>
+            <p data-i18n="trustDescription">
+              Watshasha is an open-source catalogue and metadata addon. It does
+              not scrape, proxy, host, or resolve video streams, and it never
+              handles debrid credentials. Playback sources come only from addons
+              each user chooses and configures independently.
+            </p>
+          </div>
+          <div class="trust-note" data-i18n="tmdbNote">
+            Metadata and images are provided by TMDB. Watshasha uses the TMDB
+            API but is not endorsed or certified by TMDB.
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="shell">
+      <span data-i18n="footerCopyright"
+        >© <span id="year"></span> Watshasha. Arabic stories on your
+        screen.</span
+      ><span
+        ><span data-i18n="designedBy">Designed by</span>
+        <a href="https://hmz.ie" target="_blank" rel="noreferrer">@housamz</a>
+        <span data-i18n="footerTraits">· Simple · Stateless · Open source</span></span
+      >
+    </footer>
+    <script>
+      const url = "https://watshasha.vercel.app/manifest.json",
+        button = document.getElementById("copy"),
+        languageToggle = document.getElementById("language-toggle"),
+        translations = {
+          en: {
+            pageTitle: "Watshasha — Arabic stories on your screen",
+            navFeatures: "Features",
+            navInstall: "Install",
+            eyebrow: "A Stremio catalogue for Arabic cinema",
+            heroTitle: "Arabic stories,",
+            heroAccent: "beautifully organized.",
+            heroDescription: "Discover Arabic movies and series through a fast, focused catalogue powered by TMDB—complete with posters, details, seasons, and cross-addon IMDb compatibility.",
+            installStremio: "Install on Stremio",
+            viewSteps: "View installation steps",
+            copy: "Copy",
+            copied: "Copied",
+            live: "Live on Stremio",
+            discoveryKicker: "Designed for discovery",
+            discoveryTitle: "A clearer window into Arabic entertainment.",
+            discoveryDescription: "Watshasha keeps the experience intentional: relevant Arabic titles, useful metadata, fast cached responses, and IDs that work with the wider Stremio ecosystem.",
+            featureOneTitle: "Arabic-first catalogue",
+            featureOneDescription: "Movies and series are selected using Arabic original-language metadata and presented with reliable titles and artwork.",
+            featureTwoTitle: "Rich details",
+            featureTwoDescription: "Explore descriptions, release dates, ratings, genres, cast, creators, seasons, and episode information from TMDB.",
+            featureThreeTitle: "Cross-addon ready",
+            featureThreeDescription: "IMDb-compatible IDs let Stremio request separately installed compatible addons without Watshasha handling their accounts or credentials.",
+            installKicker: "Install in minutes",
+            installTitle: "One manifest. Two new catalogues.",
+            installDescription: "Add Watshasha once to see dedicated movie and series rows across your signed-in Stremio devices.",
+            openStremio: "Open in Stremio",
+            stepOneTitle: "Open Add-ons",
+            stepOneDescription: "Launch Stremio and open the puzzle-piece Add-ons screen.",
+            stepTwoTitle: "Paste the manifest",
+            stepTwoDescription: "Use the Watshasha manifest URL in the addon URL field.",
+            stepThreeTitle: "Install Watshasha",
+            stepThreeDescription: "Confirm, then browse Watshasha under Movies and Series.",
+            trustKicker: "Transparent by design",
+            trustTitle: "Metadata, not media hosting.",
+            trustDescription: "Watshasha is an open-source catalogue and metadata addon. It does not scrape, proxy, host, or resolve video streams, and it never handles debrid credentials. Playback sources come only from addons each user chooses and configures independently.",
+            tmdbNote: "Metadata and images are provided by TMDB. Watshasha uses the TMDB API but is not endorsed or certified by TMDB.",
+            footerCopyright: `© ${new Date().getFullYear()} Watshasha. Arabic stories on your screen.`,
+            designedBy: "Designed by",
+            footerTraits: "· Simple · Stateless · Open source",
+          },
+          ar: {
+            pageTitle: "واتشاشا — حكايات عربية على شاشتك",
+            navFeatures: "المميزات",
+            navInstall: "التثبيت",
+            eyebrow: "كتالوج ستريميو للسينما العربية",
+            heroTitle: "حكايات عربية،",
+            heroAccent: "مرتبة بعناية.",
+            heroDescription: "اكتشف الأفلام والمسلسلات العربية عبر كتالوج سريع ومركّز، مدعوم ببيانات TMDB ويشمل الملصقات والتفاصيل والمواسم والتوافق مع إضافات IMDb.",
+            installStremio: "ثبّت على ستريميو",
+            viewSteps: "عرض خطوات التثبيت",
+            copy: "نسخ",
+            copied: "تم النسخ",
+            live: "متاح على ستريميو",
+            discoveryKicker: "مصمم للاكتشاف",
+            discoveryTitle: "نافذة أوضح على الترفيه العربي.",
+            discoveryDescription: "تقدم واتشاشا تجربة مركّزة تضم أعمالاً عربية ذات صلة، وبيانات مفيدة، واستجابات سريعة مخزنة مؤقتاً، ومعرّفات متوافقة مع منظومة ستريميو الأوسع.",
+            featureOneTitle: "كتالوج عربي أولاً",
+            featureOneDescription: "يتم اختيار الأفلام والمسلسلات اعتماداً على لغة العمل العربية الأصلية، وعرضها بعناوين وصور موثوقة.",
+            featureTwoTitle: "تفاصيل غنية",
+            featureTwoDescription: "تصفّح القصص وتواريخ الإصدار والتقييمات والتصنيفات والممثلين وصنّاع العمل والمواسم والحلقات من TMDB.",
+            featureThreeTitle: "متوافق مع الإضافات الأخرى",
+            featureThreeDescription: "تتيح معرّفات IMDb لستريميو طلب المصادر من الإضافات المتوافقة التي تثبتها بشكل مستقل، من دون أن تتعامل واتشاشا مع حساباتك أو بيانات دخولك.",
+            installKicker: "ثبّتها خلال دقائق",
+            installTitle: "رابط واحد. كتالوجان جديدان.",
+            installDescription: "أضف واتشاشا مرة واحدة لتظهر قوائم مخصصة للأفلام والمسلسلات على جميع أجهزة ستريميو المسجّل دخولك إليها.",
+            openStremio: "افتح في ستريميو",
+            stepOneTitle: "افتح الإضافات",
+            stepOneDescription: "شغّل ستريميو وافتح شاشة الإضافات ذات رمز قطعة الأحجية.",
+            stepTwoTitle: "ألصق رابط الإضافة",
+            stepTwoDescription: "استخدم رابط manifest الخاص بواتشاشا في حقل رابط الإضافة.",
+            stepThreeTitle: "ثبّت واتشاشا",
+            stepThreeDescription: "أكّد التثبيت، ثم تصفّح واتشاشا ضمن الأفلام والمسلسلات.",
+            trustKicker: "شفافية في التصميم",
+            trustTitle: "بيانات وصفية، وليست استضافة للمحتوى.",
+            trustDescription: "واتشاشا إضافة مفتوحة المصدر للكتالوج والبيانات الوصفية. لا تجمع روابط الفيديو ولا تمررها أو تستضيفها أو تعالجها، ولا تتعامل أبداً مع بيانات خدمات Debrid. تأتي مصادر التشغيل حصراً من الإضافات التي يختارها كل مستخدم ويضبطها بشكل مستقل.",
+            tmdbNote: "يتم توفير البيانات الوصفية والصور بواسطة TMDB. تستخدم واتشاشا واجهة TMDB، لكنها غير معتمدة أو مصدّق عليها من TMDB.",
+            footerCopyright: `© ${new Date().getFullYear()} واتشاشا. حكايات عربية على شاشتك.`,
+            designedBy: "تصميم",
+            footerTraits: "· بسيط · بلا حسابات · مفتوح المصدر",
+          },
+        };
+
+      let currentLanguage = localStorage.getItem("watshasha-language") === "ar" ? "ar" : "en";
+
+      function setLanguage(language) {
+        currentLanguage = language;
+        const strings = translations[language];
+        document.documentElement.lang = language;
+        document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+        document.title = strings.pageTitle;
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          element.textContent = strings[element.dataset.i18n];
+        });
+        languageToggle.textContent = language === "ar" ? "English" : "العربية";
+        languageToggle.setAttribute(
+          "aria-label",
+          language === "ar" ? "تغيير اللغة إلى الإنجليزية" : "Switch language to Arabic",
+        );
+        localStorage.setItem("watshasha-language", language);
+      }
+
+      languageToggle.addEventListener("click", () => {
+        setLanguage(currentLanguage === "en" ? "ar" : "en");
+      });
+
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(url);
+          button.textContent = translations[currentLanguage].copied;
+          setTimeout(
+            () => (button.textContent = translations[currentLanguage].copy),
+            1600,
+          );
+        } catch {
+          window.prompt(
+            currentLanguage === "ar"
+              ? "انسخ رابط إضافة واتشاشا:"
+              : "Copy the Watshasha manifest URL:",
+            url,
+          );
+        }
+      });
+      setLanguage(currentLanguage);
+    </script>
   </body>
 </html>

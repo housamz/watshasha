@@ -1,4 +1,4 @@
-export type MediaType = 'movie' | 'series';
+export type MediaType = "movie" | "series";
 
 export interface ParsedId {
   type: MediaType;
@@ -9,9 +9,12 @@ export function isImdbId(id: string): boolean {
   return /^tt\d{7,}$/.test(id) && !/^tt0+$/.test(id);
 }
 
-export function createWatshashaId(type: MediaType, tmdbId: number | string): string {
+export function createWatshashaId(
+  type: MediaType,
+  tmdbId: number | string,
+): string {
   if (!/^[1-9]\d*$/.test(String(tmdbId))) {
-    throw new Error('TMDB ID must be a positive integer');
+    throw new Error("TMDB ID must be a positive integer");
   }
   return `watshasha:${type}:tmdb:${tmdbId}`;
 }

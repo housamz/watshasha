@@ -5,7 +5,7 @@ export interface CatalogExtra {
 }
 
 export interface ManifestCatalog {
-  type: 'movie' | 'series';
+  type: "movie" | "series";
   id: string;
   name: string;
   extra?: CatalogExtra[];
@@ -18,8 +18,8 @@ export interface StremioManifest {
   description: string;
   logo?: string;
   background?: string;
-  resources: ('catalog' | 'meta')[];
-  types: ('movie' | 'series')[];
+  resources: ("catalog" | "meta")[];
+  types: ("movie" | "series")[];
   catalogs: ManifestCatalog[];
 }
 
@@ -35,7 +35,7 @@ export interface StremioVideo {
 
 export interface StremioCatalogItem {
   id: string;
-  type: 'movie' | 'series';
+  type: "movie" | "series";
   name: string;
   poster?: string;
   background?: string;

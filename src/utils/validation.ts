@@ -3,7 +3,7 @@ export interface ParsedExtras {
   tmdbPage: number;
 }
 
-export type CatalogType = 'movie' | 'series';
+export type CatalogType = "movie" | "series";
 
 const ITEMS_PER_PAGE = 20;
 const MAX_SKIP = 1000;
@@ -12,7 +12,7 @@ export function parseSkip(extraParam?: string): number {
   if (!extraParam) return 0;
 
   // Clean trailing .json if present from Vercel rewrite
-  const cleanExtra = extraParam.replace(/\.json$/, '');
+  const cleanExtra = extraParam.replace(/\.json$/, "");
 
   // Look for skip=N in key-value string (e.g., skip=20 or skip=20&genre=Comedy)
   const match = /skip=(\d+)/.exec(cleanExtra);
@@ -26,12 +26,12 @@ export function parseSkip(extraParam?: string): number {
 }
 
 export function isValidCatalogType(value: unknown): value is CatalogType {
-  return value === 'movie' || value === 'series';
+  return value === "movie" || value === "series";
 }
 
 export function isValidExtra(extraParam?: string): boolean {
   if (!extraParam) return true;
-  const cleanExtra = extraParam.replace(/\.json$/, '');
+  const cleanExtra = extraParam.replace(/\.json$/, "");
   const match = /^skip=(\d+)$/.exec(cleanExtra);
   return Boolean(match && Number(match[1]) <= MAX_SKIP);
 }
