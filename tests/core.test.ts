@@ -4,6 +4,8 @@ import {
   getImageUrl,
   getPreferredTitle,
   mapMovieToCatalogItem,
+  mapMovieDetailsToMeta,
+  mapTvDetailsToMeta,
   mapTvEpisodesToVideos,
   mapTvToCatalogItem,
 } from '../src/mappers/stremio.js';
@@ -84,6 +86,19 @@ describe('TMDB to Stremio mapping', () => {
   it('uses IMDb IDs when available for cross-addon interoperability', () => {
     expect(mapMovieToCatalogItem(arabicMovie, 'tt1234567').id).toBe('tt1234567');
     expect(mapTvToCatalogItem(arabicSeries, 'tt7654321').id).toBe('tt7654321');
+  });
+
+  it('keeps the requested fallback ID stable in full metadata', () => {
+    const movieMeta = mapMovieDetailsToMeta(
+      { ...arabicMovie, imdb_id: 'tt1234567' },
+      'watshasha:movie:tmdb:123',
+    );
+    const seriesMeta = mapTvDetailsToMeta(
+      { ...arabicSeries, external_ids: { imdb_id: 'tt7654321' } },
+      'watshasha:series:tmdb:456',
+    );
+    expect(movieMeta.id).toBe('watshasha:movie:tmdb:123');
+    expect(seriesMeta.id).toBe('watshasha:series:tmdb:456');
   });
 
   it('maps TV episodes to standard Stremio video IDs', () => {

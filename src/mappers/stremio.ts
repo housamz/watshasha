@@ -1,6 +1,6 @@
 import type { StremioCatalogItem, StremioMetaDetail, StremioVideo } from '../types/stremio.js';
 import type { TmdbMovieItem, TmdbTvItem, TmdbMovieDetails, TmdbTvDetails, TmdbSeasonDetails } from '../types/tmdb.js';
-import { createWatshashaId } from '../utils/ids.js';
+import { createWatshashaId, isImdbId } from '../utils/ids.js';
 
 const TMDB_IMAGE_BASE_POSTER = 'https://image.tmdb.org/t/p/w500';
 const TMDB_IMAGE_BASE_BACKDROP = 'https://image.tmdb.org/t/p/w1280';
@@ -102,8 +102,8 @@ export function mapTvDetailsToMeta(
   preferredId?: string,
   seasons: TmdbSeasonDetails[] = [],
 ): StremioMetaDetail {
-  const imdbId = preferredId || tv.external_ids?.imdb_id || undefined;
-  const catalogItem = mapTvToCatalogItem(tv, imdbId);
+  const episodeImdbId = tv.external_ids?.imdb_id || (preferredId && isImdbId(preferredId) ? preferredId : undefined);
+  const catalogItem = mapTvToCatalogItem(tv, preferredId || episodeImdbId);
   const year = tv.first_air_date ? tv.first_air_date.split('-')[0] : undefined;
 
   const genres = tv.genres ? tv.genres.map((g) => g.name) : undefined;
@@ -129,6 +129,6 @@ export function mapTvDetailsToMeta(
     cast: cast && cast.length > 0 ? cast : undefined,
     country,
     genres: genres && genres.length > 0 ? genres : undefined,
-    videos: imdbId && seasons.length > 0 ? mapTvEpisodesToVideos(imdbId, seasons) : undefined,
+    videos: episodeImdbId && seasons.length > 0 ? mapTvEpisodesToVideos(episodeImdbId, seasons) : undefined,
   };
 }

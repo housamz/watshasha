@@ -1,6 +1,6 @@
 {
   "name": "watshasha",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Watshasha — Stremio Arabic Catalogue Addon",
   "main": "api/manifest.ts",
   "scripts": {

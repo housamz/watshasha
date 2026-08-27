@@ -17,7 +17,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
   const manifest: StremioManifest = {
     id: 'app.vercel.watshasha',
-    version: '0.5.1',
+    version: '0.5.2',
     name: 'Watshasha',
     description: 'Discover curated Arabic films and television series',
     resources: ['catalog', 'meta'],

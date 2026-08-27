@@ -46,7 +46,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!details) {
         return res.status(404).json({ meta: null });
       }
-      const meta = mapMovieDetailsToMeta(details, isImdbId(cleanId) ? cleanId : undefined);
+      const meta = mapMovieDetailsToMeta(details, cleanId);
       const response: StremioMetaResponse = { meta };
       return res.status(200).json(response);
     } else if (requestedType === 'series') {
@@ -65,7 +65,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const seasons = seasonResults.flatMap((result) =>
         result.status === 'fulfilled' && result.value ? [result.value] : []
       );
-      const meta = mapTvDetailsToMeta(details, imdbId, seasons);
+      const meta = mapTvDetailsToMeta(details, cleanId, seasons);
       const response: StremioMetaResponse = { meta };
       return res.status(200).json(response);
     }
