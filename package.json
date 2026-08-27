@@ -1,0 +1,35 @@
+{
+  "name": "watshasha",
+  "version": "0.5.1",
+  "description": "Watshasha — Stremio Arabic Catalogue Addon",
+  "main": "api/manifest.ts",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "type-check": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "stremio",
+    "addon",
+    "arabic",
+    "tmdb",
+    "movies",
+    "series",
+    "vercel"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@vercel/node": "^3.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.3.3",
+    "vercel": "^59.7.0",
+    "vitest": "^1.2.0"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/manifest.json", "destination": "/api/manifest" },
+    {
+      "source": "/catalog/:type/:id.json",
+      "destination": "/api/catalog?type=:type&id=:id"
+    },
+    {
+      "source": "/catalog/:type/:id/:extra.json",
+      "destination": "/api/catalog?type=:type&id=:id&extra=:extra"
+    },
+    {
+      "source": "/meta/:type/:id.json",
+      "destination": "/api/meta?type=:type&id=:id"
+    }
+  ]
+}
